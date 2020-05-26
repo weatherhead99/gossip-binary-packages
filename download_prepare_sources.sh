@@ -16,5 +16,5 @@ cd ..
 
 echo "linking source and specfiles to rpmbuild tree..."
 ln -s `pwd`/gossip-${VERSION}.tar.gz ~/rpmbuild/SOURCES/
-ln -s `pwd`/suse_build_fix.patch ~/rpmbuild/SOURCES/
+ln -s `pwd`/suse_build_fix_v${VERSION}.patch ~/rpmbuild/SOURCES/
 ln -s `pwd`/gossip.spec ~/rpmbuild/SPECS/

@@ -17,16 +17,40 @@
 
 
 Name:           gossip
-Version:        1.31
+Version:        1.33
 Release:        0
 Summary:        Generic framework for the simulation of Silicon Photomultipliers
 License:        BSD with citation requirement
-URL:            www.kip.uni-heidelberg.de/hep-detektoren/gossip/
+Group:          Development/Libraries/C and C++
+URL:            http://www.kip.uni-heidelberg.de/hep-detektoren/gossip/
 Source0:        %{name}-%{version}.tar.gz
 Patch0:         suse_build_fix_v%{version}.patch
 BuildRequires:  gcc-c++
+BuildRequires:  root6-devel
+BuildRequires:  cmake
+%debug_package
 
 %description
+Gossip is a Generic framework for the simulation of Silicon Photomultipliers
+The simulation models the response (signal waveform and charge) of a SiPM to an arbitrarylight pulse.  In order to model a specific SiPM, you have to provide a set of basic parametersfor the simulation input.  For a precise simulating of the response, the input parameters haveto be carefully measured!
+
+%package -n libgossip
+Summary: Generic framework for the simulation of Silicon Photomultipliers
+Group: Development/Libraries/C and C++
+
+%description -n libgossip
+Gossip is a Generic framework for the simulation of Silicon Photomultipliers
+The simulation models the response (signal waveform and charge) of a SiPM to an arbitrarylight pulse.  In order to model a specific SiPM, you have to provide a set of basic parametersfor the simulation input.  For a precise simulating of the response, the input parameters haveto be carefully measured!
+
+This package contains the gossip shared library and ROOT mapping files
+
+%package devel
+Summary: Development and header files for %{name}
+Group: Development/Libraries/C and C++
+Requires: libgossip = %{version}
+
+%description devel
+Development and header files required for developing with gossip (Generic Simulation of Silicon Photomultipliers)
 
 
 %prep
@@ -42,5 +66,23 @@ make %{?_smp_mflags}
 
 %files
 %license LICENSE
+%{_bindir}/gossip
+
+%files devel
+%dir %{_includedir}/gossip
+%{_includedir}/gossip/*.h
+%dir %{_libdir}/cmake/gossip
+%{_libdir}/cmake/gossip/gossipConfig.cmake
+%{_libdir}/cmake/gossip/gossipConfigVersion.cmake
+
+%files -n libgossip
+%{_libdir}/gossip/libgossip.so
+%{_libdir}/gossip/libgossip_rdict.pcm
+%{_libdir}/gossip/libgossip.rootmap
+
 
 %changelog
+* Tue May 26 2020 Dan Weatherill <dan.weatherill@cantab.net>
+- 1.33
+-- package upstream version of gossip based on git tag v1.33
+-- add patch to fix build locations on opensuse
