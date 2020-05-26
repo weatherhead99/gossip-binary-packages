@@ -1,0 +1,58 @@
+Index: gossip/CMakeLists.txt
+===================================================================
+--- gossip.orig/CMakeLists.txt
++++ gossip/CMakeLists.txt
+@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
+ 
+ project(gossip)
+ 
++include(GNUInstallDirs)
++
+ #Set version number
+ set(gossip_VERSION_MAJOR 1)
+ set(gossip_VERSION_MINOR 32)
+@@ -67,7 +69,7 @@ configure_file(cmake/gossipConfig.cmake.
+ 
+ # ... for the install tree
+ set(CONF_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+-set(CONF_LIBS "${CMAKE_INSTALL_PREFIX}/lib/libgossip.so")
++set(CONF_LIBS "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/gossip/libgossip.so")
+ configure_file(cmake/gossipConfig.cmake.in
+ 	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/gossipConfig.cmake" @ONLY)
+ 
+@@ -83,7 +85,7 @@ add_custom_command(TARGET gossip_lib PRE
+ # copy rdict and rootmap to build dir
+ add_custom_command(TARGET gossip_lib POST_BUILD
+ 	COMMAND ${CMAKE_COMMAND} -E copy
+-	${PROJECT_BINARY_DIR}/gossip_rdict.pcm ${PROJECT_BINARY_DIR}/lib)
++	${PROJECT_BINARY_DIR}/libgossip_rdict.pcm ${PROJECT_BINARY_DIR}/lib)
+ 
+ add_custom_command(TARGET gossip_lib POST_BUILD
+ 	COMMAND ${CMAKE_COMMAND} -E copy
+@@ -91,20 +93,20 @@ add_custom_command(TARGET gossip_lib POS
+ 
+ 
+ # install target
+-install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/gossipConfig.cmake" "${PROJECT_BINARY_DIR}/gossipConfigVersion.cmake"
+-	DESTINATION cmake
++install(FILES "${PROJECT_BINARY_DIR}/gossipConfig.cmake" "${PROJECT_BINARY_DIR}/gossipConfigVersion.cmake"
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/gossip
+ 	COMPONENT dev)
+ 
+ install(FILES ${gossip_lib_HEADERS}
+-	DESTINATION include
++	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gossip/
+ 	COMPONENT dev)
+ 
+-install(FILES ${gossip_BINARY_DIR}/lib/gossip_rdict.pcm ${gossip_BINARY_DIR}/lib/libgossip.rootmap
+-	DESTINATION lib)
++install(FILES ${gossip_BINARY_DIR}/lib/libgossip_rdict.pcm ${gossip_BINARY_DIR}/lib/libgossip.rootmap
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/gossip/)
+ 
+ install(TARGETS gossip_lib
+ 	EXPORT gossip-targets
+-	DESTINATION lib
++	DESTINATION ${CMAKE_INSTALL_LIBDIR}/gossip/
+ 	COMPONENT shlib)
+ 
+ install(TARGETS gossip_exe
