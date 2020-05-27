@@ -26,8 +26,15 @@ URL:            http://www.kip.uni-heidelberg.de/hep-detektoren/gossip/
 Source0:        %{name}-%{version}.tar.gz
 Patch0:         suse_build_fix_v%{version}.patch
 BuildRequires:  gcc-c++
-BuildRequires:  root6-devel
 BuildRequires:  cmake
+BuildRequires:  root6-devel
+#break dependency issue with libffi
+#!BuildIgnore:  ghc-bootstrap
+#!BuildIgnore:  musescore-fonts
+#!BuildIgnore:  texlive-gnu-freefont-fonts
+#needed so that rmkdmod command is available
+BuildRequires:  root6
+
 %debug_package
 
 %description
@@ -76,6 +83,7 @@ make %{?_smp_mflags}
 %{_libdir}/cmake/gossip/gossipConfigVersion.cmake
 
 %files -n libgossip
+%dir %{_libdir}/gossip
 %{_libdir}/gossip/libgossip.so
 %{_libdir}/gossip/libgossip_rdict.pcm
 %{_libdir}/gossip/libgossip.rootmap
